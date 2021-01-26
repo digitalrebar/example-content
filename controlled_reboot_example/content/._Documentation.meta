@@ -1,0 +1,10 @@
+Example Content -- Controlled Reboots
+-------------------------------------
+
+This example content shows how you can control reboots during workflow execution.
+
+To use this content add the param "reboot-test-skip" to a machine. Next apply the 
+"reboot-test-stage" to the machine and it will run, then reboot the machine, on the 
+next boot the machine will check for the "reboot-test-skip" value to now be "true" 
+which happens as a task in the "reboot-test-stage". Once it sees that is true it will 
+exit moving on to the next task, which simply echos some text then exits.

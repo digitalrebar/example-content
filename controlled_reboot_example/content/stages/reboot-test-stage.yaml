@@ -1,0 +1,8 @@
+---
+Name: reboot-test-stage
+Tasks:
+  - reboot-test-skip-task1
+  - reboot-test-skip-task2
+Meta:
+  icon: "disk outline"
+  color: "green"

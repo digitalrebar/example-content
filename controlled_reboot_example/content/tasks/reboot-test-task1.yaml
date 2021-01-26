@@ -1,0 +1,16 @@
+---
+Name: reboot-test-skip-task1
+RequiredParams:
+  - reboot-test-skip
+Templates:
+  - Name: reboot-test-skip-1
+    Contents: |
+      #!/usr/bin/env bash
+      {{template "setup.tmpl" .}}
+      if [[ {{.Param "reboot-test-skip"}} == true ]]; then
+        echo "Skipping task because param says so";
+        exit 0
+      fi
+      echo "running the thing"
+      drpcli machines set "$RS_UUID" param reboot-test-skip to true
+      exit_reboot

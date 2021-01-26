@@ -1,0 +1,11 @@
+---
+Name: reboot-test-skip-task2
+RequiredParams:
+  - reboot-test-skip
+Templates:
+  - Name: reboot-test-skip-2
+    Contents: |
+      #!/usr/bin/env bash
+      {{template "setup.tmpl" .}}
+      echo "running the thing #2"
+      exit 0

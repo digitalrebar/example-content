@@ -1,0 +1,5 @@
+---
+Name: reboot-example
+Stages:
+  - reboot-test-stage
+

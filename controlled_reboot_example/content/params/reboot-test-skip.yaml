@@ -1,0 +1,9 @@
+---
+Name: reboot-test-skip
+Schema:
+  type: boolean
+  default: false
+Meta:
+  icon: "disk outline"
+  color: "green"
+  title: "RackN Content"
