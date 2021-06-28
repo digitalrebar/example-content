@@ -1,0 +1,12 @@
+---
+Description: Switch that the system is attached to
+Documentation: |
+  This parameter is used by the external registration callback to say what switch is involved
+Meta:
+  color: orange
+  icon: rss
+Name: ep/switch_name
+Schema:
+  type: string
+  default: unknown
+

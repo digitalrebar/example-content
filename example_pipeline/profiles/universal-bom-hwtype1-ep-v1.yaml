@@ -1,0 +1,72 @@
+---
+Meta:
+  color: orange
+  icon: rss
+Name: universal-bom-hwtype1-ep-v1
+Description: BOM Validation for ep-v1 on hwtype1 system
+Documentation: |
+  This is an example bom validation profile.  These can be gathered used the the
+  `ep-baseline-ep-v1` profile.  See that for more details.
+
+  The name of the BOM validation profile needs to start with `universal-bom`.
+  The following forms will be matched by the `universal-discover` classifier.
+
+  * universal-bom-<bom>-<hw>-<ua>
+  * universal-bom-<hw>-<ua>
+  * universal-bom-<hw>
+  * universal-bom-<ua>
+
+  Where:
+
+  * bom = the value of rack/bom or universal/bom
+  * hw = the value of universal/hardware
+  * ua = the value of universal/application
+
+  This profile is an example where:
+
+  * **rack/bom** and **universal/bom** is unspecified
+  * **universal/hardware** is set to `hwtype1`
+  * **universal/application** is set to `ep-v1`
+
+
+Params:
+  universal/discover-post-validation:
+    - validate-parameters
+  validate/parameters:
+    inventory/CPUs:
+      Op: equal
+      Values:
+        - 112
+    inventory/CPUSpeed:
+      Op: between
+      Values:
+        - "2000.0"
+        - "3700.0"
+    inventory/CPUCores:
+      Op: equal
+      Values:
+        - 28
+    inventory/NICs:
+      Op: equal
+      Values:
+        - 9
+    inventory/DIMMs:
+      Op: equal
+      Values:
+        - 12
+    inventory/DIMMSizes:
+      Op: equal
+      Values:
+        - [ 32768, 32768, 32768, 32768, 32768, 32768, 32768, 32768, 32768, 32768, 32768, 32768 ]
+    inventory/RaidControllers:
+      Op: equal
+      Values:
+        - 2
+    inventory/RaidDisks:
+      Op: equal
+      Values:
+        - [ 0, 4 ]
+    inventory/RaidTotalDisks:
+      Op: equal
+      Values:
+        - 4

@@ -1,0 +1,148 @@
+Overview
+--------
+
+This is an example pipeline for universal application...
+
+GREG::::: ----
+
+
+The Process
+===========
+
+**It is entirely likely that you may need to customize either the Stages or specific
+tasks attached to the Stages to meet your use case requirements.**
+
+
+Customizing Your Image - Uploaded Image Name
+============================================
+
+Please review the documentation from each of those Params for more complete details.
+
+
+Customizing Your Image - Image Contents Changes
+===============================================
+
+An example of adding repositories that are not part of the base installer definitions,
+installing packages, and then subsequently removing the repository definitioin might
+look something like the following:
+
+  ::
+
+    image-builder/pre-builder-flexiflow:
+      - my-repository-add
+      - my-install-my-packages
+      - my-repository-remove
+    image-builder/post-builder-flexiflow:
+      - my-add-etc-issue
+
+gregjj
+
+.. note:: The above tasks are examples, and do not actually exist, the operator
+          would have to create them as a part of a content pack or individual
+          objects added on to the DRP Endpoint.
+
+
+Tutorial Videos
+===============
+
+The following tutorial videos have been made that outline and show the use of this
+content pack in conjunction with the ``image-deploy`` plugin.
+
+
+Image Requirements
+==================
+
+hhsadg
+
+
+Image Build versus Image Deploy Requirements
+============================================
+
+One common pitfall of image build and deploy solutions, is ensuring your source image you
+build supports the target platforms you deploy to.  This is evident in two primary areas
+
+Legacy BIOS versus UEFI BIOS boot modes
++++++++++++++++++++++++++++++++++++++++
+
+For Linux systems, specific packages may need to be included to support UEFI boot mode,
+when the original image builder (eg *gold master*) system is in Legacy BIOS mode.  How
+
+Hardware Drivers
+++++++++++++++++
+
+Similar to the Legacy -vs- UEFI boot modes, you must ensure you inject appropriate hardware
+drivers for your target platform(s) that you will be deploying to, which may not match
+your gold master image builder platform you prepare your image on.
+
+Uploading Images
+================
+
+At the conclusion of the ``image-capture`` task (in the ``image-builder-linux`` stage),
+command to store the image on the DRP Endpoint for use by the ``image-deploy`` plugin.
+
+.. note:: Older versions (prior to v4.3.0) used two Params to define the Username and Password
+          with access to upload images to your DRP Endpoint.  The use of ``unsafe/rs-username``
+          and ``unsafe/rs-password`` Params have been removed.
+
+
+Using the Image
+===============
+
+Once the image build process has been completed, you will need to locate the HTTP file server
+URL location for use in the image deploy ``image-deploy/image-url`` Param.  To find the uploaded
+URL, review the output of the ``image-capture`` Job Log.  You should find a output similar to:
+
+  ::
+
+    | Image Builder created image information:
+    | --------------------------------------------------------------------------------
+    |         filename:  /RS_IMAGE/tarball.tgz
+    |            ident:  cf99cd80eb
+    |             date:  Tue Aug 27 18:44:35 UTC 2019
+    |             size:  517036600
+    |           md5sum:  1f40ac1bac2eb3ea99cebc38b807c15f
+    |   upload tarball:  images/rhel-tarball-20190827-184435-cf99cd80eb.tgz
+    |  upload manifest:  images/rhel-MANIFEST-20190827-184435-cf99cd80eb.txt
+
+The relevant piece is the ``images/rhel-tarball-20190827-184435-cf99cd80eb.tgz``.  Using this
+example, you can set the ``image-deploy/image-url`` to:
+
+  * ``{{ .ProvisionerURL }}/files/images/rhel-tarball-20190827-184435-cf99cd80eb.tgz``
+
+
+Example Image Deploy Profile
+++++++++++++++++++++++++++++
+
+Below is an example Profile that could be used to reference an Image Builder built image
+for deployment by the ``image-deploy`` plugin.  Note that these values are examples and
+will be unique to your built image (YAML format).
+
+  ::
+
+    ---
+    Name: "my-image-deploy"
+    Meta:
+      color: "purple"
+      icon: "wizard"
+      title: "Built by Image Builder"
+    Params:
+      image-deploy/image-os: "linux"
+      image-deploy/image-type: "tgz"
+      image-deploy/image-url: "http://192.168.124.1:8091/files/images/rhel-tarball-20190827-184435-cf99cd80eb.tgz"
+      kexec-ok: true
+
+Note that the use of ``kexec-ok: true`` is not required, but often helpful in enabling
+extremely rapid image deployment capabilities.  It is also heavily dependent on the
+built source image containing kexec support in the compiled in kernel.
+
+
+Prerequisites
+=============
+
+The image-builder content pack has Prerequisites necessary to operate correctly.  In addition
+to any content packs that define/describe BootEnvs and necessary workflow stages (for example
+RHEL 7.7 requiers ``os-other``).
+
+Please ensure you have the appropriate content packs to support workflows for building images
+as desired.  The Preqrequisistes system does not call out content or plugins that are
+optional for building your image.

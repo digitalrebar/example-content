@@ -1,0 +1,29 @@
+---
+Meta:
+  color: orange
+  icon: rss
+Name: universal-discover-config
+Documentation: |
+  This profile extends the `universal-discover` workflow to inject a task during the post flexiflow phase to
+  set additional data from an external callback.  This profile also defines a data override for the callbacks in the
+  system to allow per callback customized data.  In this case, if the callback has the `universal-linux-install-complete`
+  or the `universal-discover-start` callbacks defined, it will send the text in the middle.  Otherwise all other callbacks
+  will get "Unknown!" as a result.
+
+  To use this profile, apply it to the global profile to apply to all machines doing discovery.
+
+Params:
+  callback/data-override: |
+    {{ if eq (.Param "callback/action") "universal-discover-start" }}
+    {
+      "IP_Address": "{{.Machine.Address}}"
+    }
+    {{ else if eq (.Param "callback/action") "universal-linux-install-complete" }}
+    {
+      "HOSTS": "{{.Machine.Name}}"
+    }
+    {{ else }}
+    Unknown!
+    {{ end }}
+  universal/discover-post-flexiflow:
+    - ep-external-query-data
