@@ -1,0 +1,14 @@
+---
+Meta:
+  color: orange
+  icon: rss
+Name: ep-hw-validations
+Documentation: |
+  This profiles enables ipmi status validation during the post hardware validation steps.
+
+  This will attempt to query redfish to validate that the hardware is all OK.  This assumes
+  that ipmi/address, ipmi/username, and ipmi/password are filled in to valid the system.
+Params:
+  ipmi/skip-status-validation: false
+  universal/hardware-post-validation:
+    - "ipmi-status-validation"

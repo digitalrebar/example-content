@@ -1,0 +1,37 @@
+---
+Meta:
+  color: orange
+  icon: rss
+Name: universal-hw-hwtype1-ep-v1
+Documentation: |
+  This profile is an example of a specific hardware configuration to apply to the system.
+  This profile would apply to a machine that is marked for universal/application **ep-v1**
+  and universal/hardware **hwtype1**.
+
+
+Params:
+  bios-target-configuration:
+  bios-target-configuration:
+    BIOS.Setup.1-1/SriovGlobalEnable: Enabled
+  flash-list: []
+    # This is an example of specific dell files to flash.  These would be stage on the DRP
+    # Endpoint for retrieval.
+    #
+    #  - File: files/dell-firmware/BIOS_2R7N3_LN_2.3.10.BIN
+    #    Type: bin
+    #  - File: files/dell-firmware/BackPlane_Firmware_PP61J_LN_2.25_A00-00.BIN
+    #    Type: bin
+    #  - File: files/dell-firmware/SAS-RAID_Firmware_JVJNC_LN_50.9.3-2949_A10.BIN
+    #    Type: bin
+    #  - File: files/dell-firmware/Network_Firmware_GK57C_LN_19.0.12_A00.BIN
+    #    Type: bin
+    #  - File: files/dell-firmware/Mellanox_Network_Firmware_KTK6H_LN_14.25.10.20.BIN
+    #    Type: bin
+    #  - File: files/dell-firmware/iDRAC-with-Lifecycle-Controller_Firmware_HFMCV_LN_3.36.36.36_A00.BIN
+    #    Type: bin
+  raid-clear-config: true
+  raid-skip-encryption: true
+  raid-target-config:
+    - DiskCount: 'max'
+      RaidLevel: jbod
+      Controller: 1

@@ -1,0 +1,22 @@
+---
+Meta:
+  color: orange
+  icon: rss
+Name: ep-baseline-ep-v1
+Documentation: |
+  This profiles defines the parameters needed to baseline a system for the "ep-v1" pipeline.
+
+  The BOM will not be named, but will be assumed to only be based upon the HW type.
+
+Params:
+  universal/baseline/application: "ep-v1"
+  validate/record-parameters:
+    - inventory/CPUs
+    - inventory/CPUSpeed
+    - inventory/CPUCores
+    - inventory/NICs
+    - inventory/DIMMs
+    - inventory/DIMMSizes
+    - inventory/RaidControllers
+    - inventory/RaidDisks
+    - inventory/RaidTotalDisks

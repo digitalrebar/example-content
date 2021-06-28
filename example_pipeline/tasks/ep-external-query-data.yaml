@@ -1,0 +1,59 @@
+---
+Description: Get application type from External Callback
+Documentation: |
+  Get application type from External Callback
+
+  This requires the callback plugin being configured to have an
+  `ep-set-profile` callback.
+
+  This also requires that callback/data-override to use the templates.
+
+  See the `universal-discover-config` profile.
+
+Meta:
+  color: blue
+  feature-flags: sane-exit-codes
+  icon: setting
+Name: ep-external-query-data
+Templates:
+- Name: ep-external-query-data
+  Contents: |
+    #!/usr/bin/env bash
+    {{ template "setup.tmpl" . }}
+
+    echo "Setting Switch name"
+    SN=$(drpcli machines get {{.Machine.UUID}} param network/lldp | jq '.interface[].chassis|keys[0]' -r)
+    drpcli machines set {{.Machine.UUID}} param ep/switch_name to "$SN"
+
+    MY_APP="unknown"
+
+    echo "Starting query to external data source"
+
+    drpcli machines set {{.Machine.UUID}} param callback/action to ep-set-profile
+    # Service returns a base64 encode json blob
+    # The application pipeline name is returned in profile in the json object
+    # The hostname is returns as hostname in the json object
+    OUTPUT=$(drpcli machines runaction {{.Machine.UUID}} callbackDo callback/action ep-set-profile | jq . -r | base64 --decode)
+    drpcli machines remove {{.Machine.UUID}} param callback/action
+    echo "Received: $OUTPUT"
+
+    # Process Response Data
+    MY_APP=$(echo "$OUTPUT" | jq '.profile' -r)
+    MY_NAME=$(echo "$OUTPUT" | jq '.hostname' -r)
+
+    if [[ "$MY_APP" != "null" && "$MY_APP" != "" ]] ; then
+      echo "Seting application name: $MY_APP"
+      drpcli machines remove {{.Machine.UUID}} param universal/application || :
+      drpcli machines set {{.Machine.UUID}} param universal/application to "$MY_APP"
+    else
+      echo "Skipping setting application name: $MY_APP"
+    fi
+    if [[ "$MY_NAME" != "null" && "$MY_NAME" != "" ]] ; then
+      echo "Seting hostname: $MY_NAME"
+      drpcli machines update {{.Machine.UUID}} "{ \"Name\": \"$MY_NAME\" }" >/dev/null
+    else
+      echo "Skipping setting hostname: $MY_NAME"
+    fi
+
+    echo "all done"
+    exit 0

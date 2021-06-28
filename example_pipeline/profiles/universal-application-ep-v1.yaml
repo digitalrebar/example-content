@@ -1,0 +1,14 @@
+---
+Meta:
+  color: orange
+  icon: rss
+Name: universal-application-ep-v1
+Documentation: |
+  This profile defines a pipeline named ep-v1.  This pipeline will install a centos-8.3.2011.
+
+  This includes the default centos 8.3.2011 pipeline, but renames it to ep-v1 to allow for customizations.
+Profiles:
+  - universal-application-centos-8.3.2011
+  - ep-hw-validations
+Params:
+  universal-application: ep-v1
